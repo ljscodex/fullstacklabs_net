@@ -30,6 +30,10 @@ public class MonsterController : BaseApiController
     public async Task<ActionResult> Find(int id)
     {
         var monster = await _repository.Monsters.FindAsync(id);
+        if (monster is null)
+        {
+             return NotFound();
+        }
         return Ok(monster);
     }
 
