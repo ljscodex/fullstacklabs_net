@@ -10,6 +10,10 @@ public class BattleController : BaseApiController
 {
     private readonly IBattleOfMonstersRepository _repository;
 
+    public BattleController ( IBattleOfMonstersRepository repository)
+    {
+        this._repository = repository;
+    }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -31,7 +35,11 @@ public class BattleController : BaseApiController
     public async Task<ActionResult> Remove(int id)
     {
         await _repository.Battles.RemoveAsync(id);
-        await _repository.Save();
+        int result = await _repository.Save();
+        if (result is 0)
+        {
+            return NotFound($"The Battle with ID = {id} not found.");
+        }
         return Ok();
     }
 }

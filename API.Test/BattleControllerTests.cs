@@ -24,7 +24,7 @@ public class BattleControllerTests
             .Setup(x => x.Battles.GetAllAsync())
             .ReturnsAsync(BattlesFixture.GetBattlesMock());
 
-        BattleController sut = new BattleController();
+        BattleController sut = new BattleController( this._repository.Object);
         ActionResult result = await sut.GetAll();
         OkObjectResult objectResults = (OkObjectResult) result;
         objectResults?.Value.Should().BeOfType<Battle[]>();
@@ -55,7 +55,7 @@ public class BattleControllerTests
             .Setup(x => x.Monsters.FindAsync(idMonsterB))
             .ReturnsAsync(monsterB);
 
-        BattleController sut = new BattleController();
+        BattleController sut = new BattleController(this._repository.Object);
 
         ActionResult result = await sut.Add(b);
         BadRequestObjectResult objectResults = (BadRequestObjectResult) result;
@@ -110,5 +110,20 @@ public class BattleControllerTests
     public async Task Delete_OnNoBattleFound_Returns404()
     {
         // @TODO missing implementation
+        const int id = 123;
+
+        this._repository
+            .Setup(x => x.Battles.FindAsync(id))
+            .ReturnsAsync(() => null);
+
+        this._repository
+           .Setup(x => x.Battles.RemoveAsync(id));
+
+        BattleController sut = new BattleController(this._repository.Object);
+
+        ActionResult result = await sut.Remove(id);
+        NotFoundObjectResult objectResults = (NotFoundObjectResult)result;
+        result.Should().BeOfType<NotFoundObjectResult>();
+        Assert.Equal($"The Battle with ID = {id} not found.", objectResults.Value);
     }
 }
