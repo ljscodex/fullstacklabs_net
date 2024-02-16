@@ -28,7 +28,7 @@ public class MonsterControllerTests
             .Setup(x => x.Monsters.GetAllAsync())
             .ReturnsAsync(monsters);
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.GetAll();
         OkObjectResult objectResults = (OkObjectResult) result;
@@ -46,7 +46,7 @@ public class MonsterControllerTests
             .Setup(x => x.Monsters.FindAsync(id))
             .ReturnsAsync(monster);
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Find(id);
         OkObjectResult objectResults = (OkObjectResult)result;
@@ -62,7 +62,7 @@ public class MonsterControllerTests
             .Setup(x => x.Monsters.FindAsync(id))
             .ReturnsAsync(() => null);
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Find(id);
         NotFoundObjectResult objectResults = (NotFoundObjectResult)result;
@@ -86,7 +86,7 @@ public class MonsterControllerTests
         this._repository
             .Setup(x => x.Monsters.AddAsync(m));
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Add(m);
         OkObjectResult objectResults = (OkObjectResult)result;
@@ -111,7 +111,7 @@ public class MonsterControllerTests
         this._repository
            .Setup(x => x.Monsters.Update(id, m));
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Update(id, m);
         OkResult objectResults = (OkResult)result;
@@ -135,7 +135,7 @@ public class MonsterControllerTests
         this._repository
            .Setup(x => x.Monsters.Update(id, m));
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Update(id, m);
         NotFoundObjectResult objectResults = (NotFoundObjectResult)result;
@@ -157,7 +157,7 @@ public class MonsterControllerTests
         this._repository
            .Setup(x => x.Monsters.RemoveAsync(id));
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Remove(id);
         OkResult objectResults = (OkResult)result;
@@ -176,7 +176,7 @@ public class MonsterControllerTests
         this._repository
            .Setup(x => x.Monsters.RemoveAsync(id));
 
-        MonsterController sut = new MonsterController();
+        MonsterController sut = new MonsterController(this._repository.Object);
 
         ActionResult result = await sut.Remove(id);
         NotFoundObjectResult objectResults = (NotFoundObjectResult)result;

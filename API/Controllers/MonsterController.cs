@@ -32,7 +32,7 @@ public class MonsterController : BaseApiController
         var monster = await _repository.Monsters.FindAsync(id);
         if (monster is null)
         {
-             return NotFound();
+             return NotFound($"The monster with ID = {id} not found.");
         }
         return Ok(monster);
     }
@@ -60,7 +60,11 @@ public class MonsterController : BaseApiController
     public async Task<ActionResult> Remove(int id)
     {
         await _repository.Monsters.RemoveAsync(id);
-        await _repository.Save();
+        int result = await _repository.Save();
+        if (result is 0)
+        {
+            return NotFound($"The monster with ID = {id} not found.");
+        }
         return Ok();
     }
 

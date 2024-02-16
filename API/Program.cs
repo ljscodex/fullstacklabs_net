@@ -9,7 +9,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
-app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
 
@@ -20,5 +19,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+    app.UseCors("CorsPolicy");
+
 
 app.Run();
