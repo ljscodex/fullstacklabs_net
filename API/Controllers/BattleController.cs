@@ -27,7 +27,26 @@ public class BattleController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Add([FromBody] Battle battle)
     {
-        return Ok();
+        // Check is monsters are Null
+        if (( battle.MonsterA is null ) || (battle.MonsterB is null))
+        
+        {
+            return BadRequest("Missing ID");
+        }
+        // Check is monsters exists
+        if ((   await _repository.Monsters.FindAsync(battle.MonsterA) is null ) ||
+             ( await _repository.Monsters.FindAsync(battle.MonsterB) is null ))
+             {
+                return BadRequest ($"Monster Not Found"  );
+
+             }
+
+        
+
+
+        await _repository.Battles.AddAsync(battle);
+        await _repository.Save();
+        return Ok(battle);
     }
 
     [HttpDelete("{id:int}")]

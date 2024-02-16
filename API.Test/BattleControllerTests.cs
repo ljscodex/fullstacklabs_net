@@ -66,7 +66,36 @@ public class BattleControllerTests
     [Fact]
     public async Task Post_OnNoMonsterFound_When_StartBattle_With_NonexistentMonster()
     {
-        // @TODO missing implementation
+        int MonsterBid = 1;
+        int MonsterAid = 123;
+
+        Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+        Battle b = new Battle()
+        {
+            MonsterA = MonsterAid,
+            MonsterB = MonsterBid
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+         this._repository
+            .Setup(x => x.Monsters.FindAsync(MonsterAid))
+            .ReturnsAsync(() => null);
+
+
+        Monster monsterB = monstersMock[MonsterBid];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(MonsterBid))
+            .ReturnsAsync(monsterB);
+
+        BattleController sut = new BattleController(this._repository.Object);
+
+        ActionResult result = await sut.Add(b);
+        BadRequestObjectResult objectResults = (BadRequestObjectResult) result;
+        result.Should().BeOfType<BadRequestObjectResult>();
+        Assert.Equal("Monster Not Found", objectResults.Value);        
     }
 
     [Fact]
