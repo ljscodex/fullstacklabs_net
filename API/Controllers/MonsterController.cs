@@ -11,11 +11,18 @@ public class MonsterController : BaseApiController
 {
     private readonly IBattleOfMonstersRepository _repository;
 
+    public MonsterController(IBattleOfMonstersRepository repository)
+    {
+        this._repository = repository;
+    }
+
+
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetAll()
     {
-        return Ok();
+        IEnumerable<Monster> monsters = await _repository.Monsters.GetAllAsync();
+        return Ok(monsters);
     }
 
     [HttpGet("{id:int}")]
