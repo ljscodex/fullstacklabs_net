@@ -51,7 +51,11 @@ public class MonsterController : BaseApiController
     public async Task<ActionResult> Update(int id, [FromBody] Monster monster)
     {
         _repository.Monsters.Update(id, monster);
-        await _repository.Save();
+        int result = await _repository.Save();
+        if (result is 0)
+        {
+            return NotFound($"The monster with ID = {id} not found.");
+        }
         return Ok();
     }
 
