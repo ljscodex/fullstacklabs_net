@@ -40,9 +40,17 @@ public class BattleController : BaseApiController
                 return BadRequest ($"Monster Not Found"  );
 
              }
+        // TODO get Max Battle ID from DB
+            //battle.Id = 
 
-        
 
+        // Get monsters by ID
+        battle.MonsterARelation = await _repository.Monsters.FindAsync(battle.MonsterA);
+        battle.MonsterBRelation = await _repository.Monsters.FindAsync(battle.MonsterB);        
+
+  
+
+        battle= BattleService.StartBattle(battle);   
 
         await _repository.Battles.AddAsync(battle);
         await _repository.Save();
@@ -53,12 +61,12 @@ public class BattleController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Remove(int id)
     {
-        await _repository.Battles.RemoveAsync(id);
-        int result = await _repository.Save();
-        if (result is 0)
+        if ( await _repository.Battles.FindAsync(id) is null )
         {
             return NotFound($"The Battle with ID = {id} not found.");
         }
+        await _repository.Battles.RemoveAsync(id);
+        await _repository.Save();
         return Ok();
     }
 }

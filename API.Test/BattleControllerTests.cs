@@ -132,8 +132,27 @@ public class BattleControllerTests
     [Fact]
     public async Task Delete_OnSuccess_RemoveBattle()
     {
-        // @TODO missing implementation
-    }
+   
+
+        Battle[] battles = BattlesFixture.GetBattlesMock().ToArray();
+
+        int id = battles[0].Id  ?? 0;
+
+       this._repository
+          .Setup(x => x.Battles.RemoveAsync(id));
+
+        Battle battle = battles[0];
+
+        this._repository
+            .Setup(x => x.Battles.FindAsync(id))
+            .ReturnsAsync(battle);
+
+        BattleController sut = new BattleController(this._repository.Object);
+
+        ActionResult result = await sut.Remove(id);
+        OkResult objectResults = (OkResult)result;
+        result.Should().BeOfType<OkResult>();
+ }
 
     [Fact]
     public async Task Delete_OnNoBattleFound_Returns404()

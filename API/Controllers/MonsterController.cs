@@ -63,12 +63,12 @@ public class MonsterController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Remove(int id)
     {
-        await _repository.Monsters.RemoveAsync(id);
-        int result = await _repository.Save();
-        if (result is 0)
+        if (await _repository.Monsters.FindAsync(id) is null)
         {
             return NotFound($"The monster with ID = {id} not found.");
         }
+        await _repository.Monsters.RemoveAsync(id);
+        await _repository.Save();
         return Ok();
     }
 
