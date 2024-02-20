@@ -176,17 +176,23 @@ public class BattleControllerTests
     {
           Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
         
-       Monster monsterA = monstersMock[4];
+       Monster monsterA = monstersMock[3];
 
         this._repository
         .Setup(x => x.Monsters.FindAsync(monsterA.Id))
         .ReturnsAsync(monsterA);
 
-       Monster monsterB = monstersMock[0];
+       Monster monsterB = monstersMock[4];
 
         this._repository
             .Setup(x => x.Monsters.FindAsync(monsterB.Id))
             .ReturnsAsync(monsterB);
+
+        // check same speed
+        Assert.Equal( monsterA.Speed, monsterB.Speed);
+        // check A higher Attack than B
+        Assert.True ( monsterA.Attack > monsterB.Attack);
+
 
         Battle b = new Battle()
         {
@@ -212,17 +218,23 @@ public class BattleControllerTests
     {
        Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
         
-       Monster monsterA = monstersMock[0];
+       Monster monsterA = monstersMock[4];
 
         this._repository
         .Setup(x => x.Monsters.FindAsync(monsterA.Id))
         .ReturnsAsync(monsterA);
 
-       Monster monsterB = monstersMock[4];
+       Monster monsterB = monstersMock[3];
 
         this._repository
             .Setup(x => x.Monsters.FindAsync(monsterB.Id))
             .ReturnsAsync(monsterB);
+
+
+        // check same speed
+        Assert.Equal( monsterA.Speed, monsterB.Speed);
+        // check B higher Attack than A
+        Assert.True ( monsterB.Attack > monsterA.Attack);
 
         Battle b = new Battle()
         {
@@ -254,11 +266,17 @@ public class BattleControllerTests
         .Setup(x => x.Monsters.FindAsync(monsterA.Id))
         .ReturnsAsync(monsterA);
 
-       Monster monsterB = monstersMock[0];
+       Monster monsterB = monstersMock[2];
 
         this._repository
             .Setup(x => x.Monsters.FindAsync(monsterB.Id))
             .ReturnsAsync(monsterB);
+
+        //Check Defense (Same)
+        Assert.Equal (monsterA.Defense , monsterB.Defense);
+        //Check monsterA > speed
+        Assert.True( monsterA.Speed > monsterB.Speed);
+        
 
         Battle b = new Battle()
         {
