@@ -33,22 +33,18 @@ public class BattleController : BaseApiController
         {
             return BadRequest("Missing ID");
         }
+        // Get monsters by ID
+        battle.MonsterARelation = await _repository.Monsters.FindAsync(battle.MonsterA);
+        battle.MonsterBRelation = await _repository.Monsters.FindAsync(battle.MonsterB);  
         // Check is monsters exists
-        if ((   await _repository.Monsters.FindAsync(battle.MonsterA) is null ) ||
-             ( await _repository.Monsters.FindAsync(battle.MonsterB) is null ))
+        if ((   battle.MonsterARelation is null ) ||
+             ( battle.MonsterBRelation is null ))
              {
                 return BadRequest ($"Monster Not Found"  );
 
              }
         // TODO get Max Battle ID from DB
             //battle.Id = 
-
-
-        // Get monsters by ID
-        battle.MonsterARelation = await _repository.Monsters.FindAsync(battle.MonsterA);
-        battle.MonsterBRelation = await _repository.Monsters.FindAsync(battle.MonsterB);        
-
-  
 
         battle= BattleService.StartBattle(battle);   
 
