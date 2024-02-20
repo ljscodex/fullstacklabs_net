@@ -119,12 +119,12 @@ public class MonsterController : BaseApiController
                         await _repository.Monsters.AddAsync(monsters);
                         await _repository.Save();
 
-                        System.IO.File.Delete(filepath);
+                      //  System.IO.File.Delete(filepath);
                         return Ok();
                     }
                     catch (Exception)
                     {
-                        System.IO.File.Delete(filepath);
+                       // System.IO.File.Delete(filepath);
                         return BadRequest("Wrong data mapping.");
                     }
                 }   

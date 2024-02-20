@@ -1,6 +1,9 @@
 using System.Diagnostics;
+using System.Globalization;
 using API.Controllers;
+using API.Models;
 using API.Test.Fixtures;
+using CsvHelper;
 using FluentAssertions;
 using Lib.Repository.Entities;
 using Lib.Repository.Repository;
@@ -187,7 +190,50 @@ public class MonsterControllerTests
     [Fact]
     public async Task Post_OnSuccess_ImportCsvToMonster()
     {
-        // @TODO missing implementation
+        List<Monster> monsters;
+
+        string projectRootPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
+        string directory = Path.Combine(projectRootPath, "Files");
+        string mimeType = "Text";
+        string fileName = "monsters-correct.csv";
+        string filepath = Path.Combine(directory, fileName);
+
+        byte[] fileBytes = File.ReadAllBytes(filepath);
+        IFormFile formFile = new FormFile(new MemoryStream(fileBytes), 0, fileBytes.Length, fileName, fileName)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = mimeType
+        };
+    
+
+        using (var reader = new StreamReader(filepath))
+        {
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<MonsterToImport>().ToList();
+                monsters = records.Select(x => new Monster()
+                {
+                    Name = x.name,
+                    Attack = x.attack,
+                    Defense = x.defense,
+                    Speed = x.speed,
+                    Hp = x.hp,
+                    ImageUrl = x.imageUrl
+                }).ToList();
+            }
+        }
+
+        Assert.True(monsters.Any());
+
+        this._repository.Setup(x => x.Monsters.AddAsync(monsters));
+        
+        MonsterController sut = new MonsterController(this._repository.Object);
+
+        ActionResult result = await sut.ImportCsv(formFile  );
+        OkResult objectResults = (OkResult)result;
+        result.Should().BeOfType<OkResult>();
+        //Assert.Equal($"The monster with ID = {id} not found.", objectResults.Value);
+
     }
 
 }
