@@ -101,32 +101,182 @@ public class BattleControllerTests
     [Fact]
     public async Task Post_OnSuccess_Returns_With_MonsterAWinning()
     {
-        // @TODO missing implementation
+       Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+       Monster monsterA = monstersMock[4];
+
+        this._repository
+        .Setup(x => x.Monsters.FindAsync(monsterA.Id))
+        .ReturnsAsync(monsterA);
+
+       Monster monsterB = monstersMock[0];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(monsterB.Id))
+            .ReturnsAsync(monsterB);
+
+        Battle b = new Battle()
+        {
+            MonsterA = monsterA.Id,
+            MonsterB = monsterB.Id,
+            Id = 11
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+
+
+        BattleController sut = new BattleController(this._repository.Object);
+        ActionResult result = await sut.Add(b);
+        OkObjectResult objectResults = (OkObjectResult)result;
+        result.Should().BeOfType<OkObjectResult>();
+        objectResults?.Value.Should().BeOfType<Battle>();
+        Assert.Equal( monsterA.Id,((Lib.Repository.Entities.Battle)objectResults.Value).Winner);
     }
 
 
     [Fact]
     public async Task Post_OnSuccess_Returns_With_MonsterBWinning()
     {
-        // @TODO missing implementation
+       Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+       Monster monsterA = monstersMock[0];
+
+        this._repository
+        .Setup(x => x.Monsters.FindAsync(monsterA.Id))
+        .ReturnsAsync(monsterA);
+
+       Monster monsterB = monstersMock[4];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(monsterB.Id))
+            .ReturnsAsync(monsterB);
+
+        Battle b = new Battle()
+        {
+            MonsterA = monsterA.Id,
+            MonsterB = monsterB.Id,
+            Id = 10
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+
+
+        BattleController sut = new BattleController(this._repository.Object);
+        ActionResult result = await sut.Add(b);
+        OkObjectResult objectResults = (OkObjectResult)result;
+        result.Should().BeOfType<OkObjectResult>();
+        objectResults?.Value.Should().BeOfType<Battle>();
+        Assert.Equal( monsterB.Id,((Lib.Repository.Entities.Battle)objectResults.Value).Winner);
     }
 
     [Fact]
     public async Task Post_OnSuccess_Returns_With_MonsterAWinning_When_TheirSpeedsSame_And_MonsterA_Has_Higher_Attack()
     {
-        // @TODO missing implementation
+          Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+       Monster monsterA = monstersMock[4];
+
+        this._repository
+        .Setup(x => x.Monsters.FindAsync(monsterA.Id))
+        .ReturnsAsync(monsterA);
+
+       Monster monsterB = monstersMock[0];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(monsterB.Id))
+            .ReturnsAsync(monsterB);
+
+        Battle b = new Battle()
+        {
+            MonsterA = monsterA.Id,
+            MonsterB = monsterB.Id,
+            Id = 10
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+
+
+        BattleController sut = new BattleController(this._repository.Object);
+        ActionResult result = await sut.Add(b);
+        OkObjectResult objectResults = (OkObjectResult)result;
+        result.Should().BeOfType<OkObjectResult>();
+        objectResults?.Value.Should().BeOfType<Battle>();
+        Assert.Equal( monsterA.Id,((Lib.Repository.Entities.Battle)objectResults.Value).Winner);
     }
 
     [Fact]
     public async Task Post_OnSuccess_Returns_With_MonsterBWinning_When_TheirSpeedsSame_And_MonsterB_Has_Higher_Attack()
     {
-        // @TODO missing implementation
+       Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+       Monster monsterA = monstersMock[0];
+
+        this._repository
+        .Setup(x => x.Monsters.FindAsync(monsterA.Id))
+        .ReturnsAsync(monsterA);
+
+       Monster monsterB = monstersMock[4];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(monsterB.Id))
+            .ReturnsAsync(monsterB);
+
+        Battle b = new Battle()
+        {
+            MonsterA = monsterA.Id,
+            MonsterB = monsterB.Id,
+            Id = 10
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+
+
+        BattleController sut = new BattleController(this._repository.Object);
+        ActionResult result = await sut.Add(b);
+        OkObjectResult objectResults = (OkObjectResult)result;
+        result.Should().BeOfType<OkObjectResult>();
+        objectResults?.Value.Should().BeOfType<Battle>();
+        Assert.Equal( monsterB.Id,((Lib.Repository.Entities.Battle)objectResults.Value).Winner);
     }
 
     [Fact]
     public async Task Post_OnSuccess_Returns_With_MonsterAWinning_When_TheirDefensesSame_And_MonsterA_Has_Higher_Speed()
     {
-        // @TODO missing implementation
+            Monster[] monstersMock = MonsterFixture.GetMonstersMock().ToArray();
+        
+       Monster monsterA = monstersMock[3];
+
+        this._repository
+        .Setup(x => x.Monsters.FindAsync(monsterA.Id))
+        .ReturnsAsync(monsterA);
+
+       Monster monsterB = monstersMock[0];
+
+        this._repository
+            .Setup(x => x.Monsters.FindAsync(monsterB.Id))
+            .ReturnsAsync(monsterB);
+
+        Battle b = new Battle()
+        {
+            MonsterA = monsterA.Id,
+            MonsterB = monsterB.Id,
+            Id = 10
+        };
+
+        this._repository.Setup(x => x.Battles.AddAsync(b));
+
+
+
+        BattleController sut = new BattleController(this._repository.Object);
+        ActionResult result = await sut.Add(b);
+        OkObjectResult objectResults = (OkObjectResult)result;
+        result.Should().BeOfType<OkObjectResult>();
+        objectResults?.Value.Should().BeOfType<Battle>();
+        Assert.Equal( monsterA.Id,((Lib.Repository.Entities.Battle)objectResults.Value).Winner);
     }
 
     [Fact]
